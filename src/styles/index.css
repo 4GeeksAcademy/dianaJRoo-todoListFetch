@@ -10,3 +10,50 @@
     import 'relative/path/to/stylesheet.scss';
 
 */
+body {
+    margin-top: 100px;
+}
+ul {
+    margin-bottom: 0;
+    list-style: none;
+    padding: 5px;
+    border: 2px solid rgb(215, 208, 208);
+    box-shadow: 10px 5px 5px rgb(201, 148, 188);
+}
+li {
+    border: 1px solid rgb(242, 198, 198);
+    padding: 5px;
+}
+h1 {
+    text-align: center;
+    color: brown;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 50px;
+}
+input {
+    border: none;
+    width: 100%;
+}
+
+input:focus-visible {
+    outline: none;
+}
+
+.footer {
+    color: rgb(180, 178, 178);
+}
+#app {
+    background-color: whitesmoke;
+    width: 800px;
+    margin: auto;
+    border-radius: 5px ;
+    box-shadow: 10px 5px 5px rgb(248, 161, 161);
+}
+
+body {
+    background-color: pink;
+}
+.container {
+    height: 60vh;
+    width: 50vw;
+}
