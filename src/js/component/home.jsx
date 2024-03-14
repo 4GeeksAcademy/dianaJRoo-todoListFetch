@@ -1,66 +1,147 @@
-import React, { useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faX } from '@fortawesome/free-solid-svg-icons'
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 
 
 //create your first component
-const Home = () => {
-	const [inputValue, setInputValue] = useState("");
-	const [todos, setTodos] = useState([]);
-	const [activeIndex, setactiveIndex] = useState(null)
+
+const TodoListFetch = () => {
+
+	const [todo, setTodo] = useState({
+		label: '',
+		done: false,
+	});
+	const [list, setList] = useState([])
+	const [activeIndex, setActiveIndex] = useState(null);
+
+	const getList = async () => {
+		try {
+			const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/dianajroo')
+			const data = await response.json()
+			// console.log(data);
+			setList(data);
+		} catch {
+			createUser()
+		}
+	}
+
+	const createUser = async () => {
+		try {
+			const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/dianajroo', {
+				method: "POST",
+				body: JSON.stringify([]),
+				headers: {
+					"Content-Type": "application/json"
+				}
+			})
+			if (response.ok) {
+				getList();
+			}
+		}
+		catch (error) {
+			console.log(error);
+		}
+	}
+
+	const AddTask = async (e) => {
+		if (e.key === 'Enter' && e.target.value.trim() !== '') {
+			try {
+				const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/dianajroo', {
+					method: "PUT",
+					body: JSON.stringify([...list, todo]),
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
+				if (response.ok) {
+					getList();
+					setTodo({
+						label: '',
+						done: false,
+					})
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	}
+
+	const handleChange = (e) => {
+		setTodo({ ...todo, "label": e.target.value });
+	}
+
+	const deleteTask = async (index) => {
+		const filterList = list.filter((todo, i) => {
+			if (index !== i) {
+				return true;
+			}
+			return false;
+		})
+		try {
+			const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/dianajroo', {
+				method: "PUT",
+				body: JSON.stringify(filterList),
+				headers: {
+					"Content-Type": "application/json"
+				}
+			})
+			if (response.ok) {
+				setList(filterList);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+
+	}
+
+	const deleteAll = async () => {
+		try {
+			const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/dianajroo', {
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json"
+				}
+			})
+			setList([]);
+			createUser();
+		}
+		catch (error) {
+			console.log(error);
+		}
+
+	}
+
+	let onMouseEnter = (index) => {
+		setActiveIndex(index);
+	}
+
+	let onMouseLeave = () => {
+		setActiveIndex(null);
+	}
 
 	useEffect(() => {
+		getList();
+	}, []);
 
-		fetch('https://playground.4geeks.com/apis/fake/todos/user/dianajroo', {
-			method: "GET",
-			 
-		})
-			.then(resp => {
-				return resp.json(); // Intentará parsear el resultado a JSON y retornará una promesa donde puedes usar .then para seguir con la lógica
-			})
-			.then(data => {
-				// Aquí es donde debe comenzar tu código después de que finalice la búsqueda
-				setTodos(data); // Esto imprimirá en la consola el objeto exacto recibido del servidor
-			})
-			.catch(error => {
-				// Manejo de errores
-				console.log(error);
-			});
-
-
-
-
-	}, [])
 
 	return (
-		<div className="container">
-			<h1>todos</h1>
-			<ul>
-				<li> <input type="text"
-					onChange={(e) => setInputValue(e.target.value)}
-					value={inputValue}
-					onKeyUp={(e) => {
-						if (e.key === "Enter") {
-							setTodos(todos.concat(inputValue));
-							setInputValue("")
-						}
-					}}
-					placeholder="Que necesitas hacer?"></input>
+		<>
+			<div className="container mt-4">
+				<h1 style={{ color: '#7f7f7f', textAlign: 'center', fontSize: '5rem' }}>todos</h1>
+				<div>
+					<input type="text" placeholder="What needs to be done?" value={todo.label} onKeyUp={AddTask} onChange={handleChange}></input>
+					{
+						list.map((item, index) => {
+							return <li className="form-control" key={index} style={{ backgroundColor: activeIndex === index ? 'pink' : 'pink', margin: '0.5rem' }} onMouseEnter={() => onMouseEnter(index)} onMouseLeave={onMouseLeave}>{item.label} {activeIndex === index && (<button onClick={() => deleteTask(index)}  style={{ cursor: 'pointer', border: 'none', borderRadius: '2px', backgroundColor: 'white', }} >x</button>)} </li>
+						})
+					}
 
-				</li>
-				{todos.map((todo, index) => (
-					<li key={index} style={{ display: "flex", justifyContent: "space-between" }} onMouseEnter={() => setactiveIndex(index)} onMouseLeave={() => setactiveIndex(null)}>
-						{todo.label} {index == activeIndex && <FontAwesomeIcon icon={faX} size="xs" style={{ color: "#e66565", }} onClick={() => setTodos(todos.filter((t, flujoIndex) => index != flujoIndex))} />}
-					</li>
-				))}
+					<button style={{borderRadius: '3px', border: 'none', background: 'pink', marginTop: '20px', display: 'flex', justifyContent: 'center',}} onClick={deleteAll}>Delete All</button>
+					{list.length > 1 ? (<span className="d-flex align-items-start" style={{  background: '#EBEDEF', width: '100%', marginTop: '50px' }}>{list.length}items left</span>) : (<span className="d-flex align-items-start" style={{ marginLeft: '0.5rem', background: '#EBEDEF', width: '100%', marginTop: '0.5rem' }}>{list.length}item left</span>)}
+				</div>
+			</div>
+		</>
 
-				<div className="footer">{todos.length} items left</div>
-
-			</ul>
-		</div>
 	);
 };
 
-export default Home;
+export default TodoListFetch;
