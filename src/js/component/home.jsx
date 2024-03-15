@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faX } from '@fortawesome/free-solid-svg-icons'
 
 
-
-//create your first component
 
 const TodoListFetch = () => {
 
@@ -20,11 +20,11 @@ const TodoListFetch = () => {
 			// console.log(data);
 			setList(data);
 		} catch {
-			createUser()
+			doId()
 		}
 	}
 
-	const createUser = async () => {
+	const doId = async () => {
 		try {
 			const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/dianajroo', {
 				method: "POST",
@@ -65,7 +65,7 @@ const TodoListFetch = () => {
 		}
 	}
 
-	const handleChange = (e) => {
+	const doShift = (e) => {
 		setTodo({ ...todo, "label": e.target.value });
 	}
 
@@ -128,10 +128,10 @@ const TodoListFetch = () => {
 			<div className="container mt-4">
 				<h1 style={{ color: '#7f7f7f', textAlign: 'center', fontSize: '5rem' }}>todos</h1>
 				<div>
-					<input type="text" placeholder="What needs to be done?" value={todo.label} onKeyUp={AddTask} onChange={handleChange}></input>
+					<input type="text" placeholder="What needs to be done?" value={todo.label} onKeyUp={AddTask} onChange={doShift}></input>
 					{
 						list.map((item, index) => {
-							return <li className="form-control" key={index} style={{ backgroundColor: activeIndex === index ? 'pink' : 'pink', margin: '0.5rem' }} onMouseEnter={() => onMouseEnter(index)} onMouseLeave={onMouseLeave}>{item.label} {activeIndex === index && (<button onClick={() => deleteTask(index)}  style={{ cursor: 'pointer', border: 'none', borderRadius: '2px', backgroundColor: 'white', }} >x</button>)} </li>
+							return <li className="form-control" key={index} style={{ backgroundColor: activeIndex === index ? 'pink' : 'pink', margin: '0.5rem' }} onMouseEnter={() => onMouseEnter(index)} onMouseLeave={onMouseLeave}>{item.label} {activeIndex === index && <FontAwesomeIcon icon={faX} size="xs" style={{color: "#e66565", display: 'flex', justifyContent: 'space-between'}} onClick={() => deleteTask(index) }/>} </li>
 						})
 					}
 
