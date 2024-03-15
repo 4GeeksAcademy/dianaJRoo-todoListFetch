@@ -127,17 +127,17 @@ const TodoListFetch = () => {
 		<>
 			<div className="container mt-4">
 				<h1 style={{ color: '#7f7f7f', textAlign: 'center', fontSize: '5rem' }}>todos</h1>
-				<div>
+				<ul>
 					<input type="text" placeholder="What needs to be done?" value={todo.label} onKeyUp={AddTask} onChange={doShift}></input>
 					{
 						list.map((item, index) => {
-							return <li className="form-control" key={index} style={{ backgroundColor: activeIndex === index ? 'pink' : 'pink', margin: '0.5rem' }} onMouseEnter={() => onMouseEnter(index)} onMouseLeave={onMouseLeave}>{item.label} {activeIndex === index && <FontAwesomeIcon icon={faX} size="xs" style={{color: "#e66565", display: 'flex', justifyContent: 'space-between'}} onClick={() => deleteTask(index) }/>} </li>
+							return <li className="form-control" key={index} style={{ backgroundColor: activeIndex === index ? 'pink' : 'pink', margin: '10px', width: '710px' }} onMouseEnter={() => onMouseEnter(index)} onMouseLeave={onMouseLeave}>{item.label} {activeIndex === index && <FontAwesomeIcon icon={faX} size="xs" style={{color: "#e66565", display: 'flex', justifyContent: 'flex-end', flexDirection: 'row'}} onClick={() => deleteTask(index) }/>} </li>
 						})
 					}
 
 					<button style={{borderRadius: '3px', border: 'none', background: 'pink', marginTop: '20px', display: 'flex', justifyContent: 'center',}} onClick={deleteAll}>Delete All</button>
 					{list.length > 1 ? (<span className="d-flex align-items-start" style={{  background: '#EBEDEF', width: '100%', marginTop: '50px' }}>{list.length}items left</span>) : (<span className="d-flex align-items-start" style={{ marginLeft: '0.5rem', background: '#EBEDEF', width: '100%', marginTop: '0.5rem' }}>{list.length}item left</span>)}
-				</div>
+				</ul>
 			</div>
 		</>
 
